@@ -1,22 +1,108 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-multi-select-dropdown',
+  templateUrl: './multi-select-dropdown.component.html',
+  styleUrls: ['./multi-select-dropdown.component.css']
+})
+export class MultiSelectDropdownComponent {
+  @Input() options: string[] = [];
+  @Input() placeholder: string = 'Select options';
+  @Output() selectionChanged = new EventEmitter<string[]>();
+
+  showDropdown = false;
+  selectedOptions: Set<string> = new Set();
+  tempSelectedOptions: Set<string> = new Set();
+
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+    this.tempSelectedOptions = new Set(this.selectedOptions); // clone on open
+  }
+
+  toggleOption(option: string) {
+    if (this.tempSelectedOptions.has(option)) {
+      this.tempSelectedOptions.delete(option);
+    } else {
+      this.tempSelectedOptions.add(option);
+    }
+  }
+
+  applySelection() {
+    this.selectedOptions = new Set(this.tempSelectedOptions);
+    this.showDropdown = false;
+    this.selectionChanged.emit(Array.from(this.selectedOptions));
+  }
+
+  isChecked(option: string): boolean {
+    return this.tempSelectedOptions.has(option);
+  }
+
+  get displayText(): string {
+    return this.selectedOptions.size > 0
+      ? Array.from(this.selectedOptions).join(', ')
+      : this.placeholder;
+  }
+}
+
+<div class="dropdown-container">
+  <div class="dropdown-display" (click)="toggleDropdown()">
+    {{ displayText }}
+    <span class="arrow">&#9662;</span>
+  </div>
+
+  <div class="dropdown-list" *ngIf="showDropdown">
+    <div *ngFor="let option of options">
+      <label>
+        <input type="checkbox" [checked]="isChecked(option)" (change)="toggleOption(option)">
+        {{ option }}
+      </label>
+    </div>
+
+    <button class="apply-button" (click)="applySelection()">Apply</button>
+  </div>
+</div>
+
+
+.dropdown-container {
+  position: relative;
+  width: 200px;
+}
+
+.dropdown-display {
+  padding: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.arrow {
+  float: right;
+}
+
+.dropdown-list {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  padding: 8px;
+}
+
+.apply-button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px;
+}
+
 <app-multi-select-dropdown
-  [options]="dropdownOptions"
-  [selectedValues]="selectedItems"
-  [labelKey]="'name'"
-  [valueKey]="'id'"
-  placeholder="Choose options"
-  (selectionChange)="onSelectionChanged($event)">
+  [options]="['Apple', 'Banana', 'Cherry', 'Date']"
+  placeholder="Select fruits"
+  (selectionChanged)="onSelectionChange($event)">
 </app-multi-select-dropdown>
 
-
-dropdownOptions = [
-  { id: 1, name: 'Apple' },
-  { id: 2, name: 'Banana' },
-  { id: 3, name: 'Cherry' },
-  { id: 4, name: 'Date' }
-];
-
-selectedItems: number[] = [];
-
-onSelectionChanged(selected: number[]) {
-  console.log('Applied Items:', selected);
+onSelectionChange(selected: string[]) {
+  console.log('Selected options:', selected);
 }
+
+
