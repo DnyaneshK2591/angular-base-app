@@ -1,0 +1,21 @@
+<div class="dropdown-container">
+  <div class="dropdown-toggle" (click)="toggleDropdown()">
+    {{ selectedValues.length ? selectedValues.length + ' selected' : placeholder }}
+    <span class="arrow">&#9662;</span>
+  </div>
+
+  <div class="dropdown-menu" *ngIf="isDropdownOpen">
+    <div class="option" *ngFor="let option of options">
+      <label>
+        <input 
+          type="checkbox" 
+          [checked]="isSelected(option)"
+          (change)="toggleSelection(option)" />
+        {{ option[labelKey] }}
+      </label>
+    </div>
+    <div class="dropdown-actions">
+      <button (click)="applySelection()">Apply</button>
+    </div>
+  </div>
+</div>
