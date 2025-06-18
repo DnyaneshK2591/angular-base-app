@@ -1,44 +1,22 @@
-.dropdown-container {
-  position: relative;
-  width: 200px;
-}
+<app-multi-select-dropdown
+  [options]="dropdownOptions"
+  [selectedValues]="selectedItems"
+  [labelKey]="'name'"
+  [valueKey]="'id'"
+  placeholder="Choose options"
+  (selectionChange)="onSelectionChanged($event)">
+</app-multi-select-dropdown>
 
-.dropdown-toggle {
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 5px;
-  background-color: white;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-}
 
-.dropdown-menu {
-  position: absolute;
-  width: 100%;
-  background-color: white;
-  border: 1px solid #ccc;
-  margin-top: 5px;
-  padding: 8px;
-  z-index: 1000;
-  max-height: 250px;
-  overflow-y: auto;
-}
+dropdownOptions = [
+  { id: 1, name: 'Apple' },
+  { id: 2, name: 'Banana' },
+  { id: 3, name: 'Cherry' },
+  { id: 4, name: 'Date' }
+];
 
-.option {
-  padding: 4px 0;
-}
+selectedItems: number[] = [];
 
-.dropdown-actions {
-  margin-top: 8px;
-  text-align: right;
-}
-
-button {
-  padding: 5px 10px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
+onSelectionChanged(selected: number[]) {
+  console.log('Applied Items:', selected);
 }
