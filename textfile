@@ -1,50 +1,44 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+.dropdown-container {
+  position: relative;
+  width: 200px;
+}
 
-@Component({
-  selector: 'app-multi-select-dropdown',
-  templateUrl: './multi-select-dropdown.component.html',
-  styleUrls: ['./multi-select-dropdown.component.scss']
-})
-export class MultiSelectDropdownComponent implements OnInit {
-  @Input() options: any[] = [];
-  @Input() labelKey: string = 'label';
-  @Input() valueKey: string = 'value';
-  @Input() placeholder: string = 'Select options';
-  @Input() selectedValues: any[] = [];
+.dropdown-toggle {
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
 
-  @Output() selectionChange = new EventEmitter<any[]>();
+.dropdown-menu {
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  padding: 8px;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+}
 
-  tempSelection: any[] = [];
-  isDropdownOpen = false;
+.option {
+  padding: 4px 0;
+}
 
-  ngOnInit() {
-    this.tempSelection = [...this.selectedValues];
-  }
+.dropdown-actions {
+  margin-top: 8px;
+  text-align: right;
+}
 
-  toggleSelection(option: any) {
-    const value = option[this.valueKey];
-    const index = this.tempSelection.indexOf(value);
-    if (index > -1) {
-      this.tempSelection.splice(index, 1);
-    } else {
-      this.tempSelection.push(value);
-    }
-  }
-
-  isSelected(option: any): boolean {
-    return this.tempSelection.includes(option[this.valueKey]);
-  }
-
-  applySelection() {
-    this.selectedValues = [...this.tempSelection];
-    this.selectionChange.emit(this.selectedValues);
-    this.isDropdownOpen = false;
-  }
-
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-    if (this.isDropdownOpen) {
-      this.tempSelection = [...this.selectedValues]; // reset to current state
-    }
-  }
+button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
 }
